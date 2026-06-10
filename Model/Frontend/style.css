@@ -1,0 +1,346 @@
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: monospace;
+}
+
+.rightBar_one{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.rightBar_one :nth-child(1){
+    background-color: blue;
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+}
+.rightBar_two{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    background-color:  #0781ec56;
+    padding: 6px;
+    color: #0616f8;
+    font-weight: bold;
+    border-radius: 10px;
+}
+
+.rightBar{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+     border-right: 1px solid grey;
+     padding: 10px;
+}
+
+.form{
+    border: 1px solid black;
+    padding: 5px;
+    width: max-content;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin: 0 auto;
+}
+.form button{
+   border: none;
+   background: none;
+}
+.form input{
+  padding: 3px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+}
+.form i{
+    cursor: pointer;
+    background-color: #0616f8;
+    padding: 8px;
+    color: white;
+    border-radius: 50%;
+}
+.form i:hover {
+   background-color: #040e95;
+}
+
+.leftBar_two{
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+}
+.leftBar_two div{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #0616f8;
+    color: white;
+    width: max-content;
+    padding: 7px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 13px;
+}
+.leftBar_two div:hover {
+    background-color: #040e95;
+}
+.employeeDash{
+    display: grid;
+    grid-template-columns: 20% 70%;
+    gap: 30px;
+}
+.leftBar{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 2rem;
+}
+.leftBar_three{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+    box-shadow: 5px 5px 10px black;
+    border-radius: 10px;
+}
+.one{
+    display: grid;
+     grid-template-columns: 5% 15% 20% 5% 15% 15% 10%;
+       gap: 10px;
+     align-items: center;
+     padding: 10px;
+     border-bottom: 0.8px solid grey;
+}
+
+.two{
+   display: grid;
+     grid-template-columns: 5% 15% 20% 5% 15% 15% 10%;
+     gap: 10px;
+     align-items: center;
+     padding: 10px;
+      border-bottom: 0.8px solid grey;
+}
+
+.name{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.name div{
+    background-color: #6a95f1b3;
+    color: #0616f8;
+    padding: 5px;
+    border-radius: 50%;
+}
+.action{
+    display: flex;
+    gap: 5px;
+    
+}
+.action :nth-child(1){
+    color: #0616f8;
+     border: 2px solid #0616f8;
+     padding: 5px;
+     border-radius: 10px;
+     cursor: pointer;
+}
+.action :nth-child(2){
+    color: red;
+     border: 2px solid red;
+     padding: 5px;
+     border-radius: 10px;
+     cursor: pointer
+}
+.action :nth-child(2):hover {
+   color: hsl(0, 100%, 30%);
+}
+.action :nth-child(1):hover {
+   color: hsl(236, 95%, 30%);
+}
+.overlay{
+
+   position: fixed;
+   background-color: rgba(0, 0, 0, 0.3);
+    inset: 0;
+    backdrop-filter: blur(5px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+.overlay.show{
+   display: flex;
+}
+.formEmp{
+   display: flex;
+   flex-direction: column;
+    gap: 10px;
+    width: 300px;
+    background-color: rgba(0, 0, 0, 0.557);
+     padding: 20px;
+     border-radius: 10px;
+   }
+.formEmp input{
+   border: none;
+   outline: none;
+   padding: 10px;
+   background-color: #141414e3;
+   color: white;
+}
+.formEmp h3{
+   text-align: center;
+   color: #006effe7;
+}
+.formEmp input::placeholder{
+   color: #ffffffc4;
+}
+.btn{
+   margin: 0 auto;
+}
+.btn button{
+   background-color: #006effe7;
+   color: white;
+    padding: 8px;
+    width: 60px;
+    border: none;
+}
+.btn button:hover {
+   background-color: #2600ff;
+}
+small{
+   color: red;
+}
+
+@media (max-width: 360px){
+    
+ .employeeDash{
+    grid-template-columns: 1fr;
+ }
+ .rightBar{
+    align-items: center;
+    border-right: none;
+    border-bottom: 1px solid grey;
+ }
+ .leftBar_two{
+    justify-content: center;
+    gap: 150px;
+ }
+ .one{
+    display: none;
+ }
+ .two{
+    grid-template-columns: 1fr;
+    align-self: center;
+    text-align: center;
+    gap: 15px;
+    border: 1px solid grey;
+    border-radius: 10px;
+    padding: 10px 30px;
+ }
+ .two:hover {
+    border: 1px solid blue;
+ }
+ .action{
+    margin: 0 auto;
+ }
+  .name{
+   margin: 0 auto;
+ }
+  .result{
+   
+   display: flex;
+   flex-direction: column;
+   gap: 20px;
+ }
+}
+
+
+@media (max-width: 480px){
+    
+ .employeeDash{
+    grid-template-columns: 1fr;
+ }
+ .rightBar{
+    align-items: center;
+    border-right: none;
+    border-bottom: 1px solid grey;
+ }
+ .leftBar_two{
+    justify-content: center;
+    gap: 150px;
+ }
+ .one{
+    display: none;
+ }
+ .two{
+    grid-template-columns: 1fr;
+    align-self: center;
+    text-align: center;
+    gap: 15px;
+    border: 1px solid grey;
+    border-radius: 10px;
+    padding: 10px 30px;
+ }
+ .two:hover {
+    border: 1px solid blue;
+ }
+ .action{
+    margin: 0 auto;
+ }
+  .name{
+   margin: 0 auto;
+ }
+  .result{
+   
+   display: flex;
+   flex-direction: column;
+   gap: 20px;
+ }
+}
+
+@media (max-width: 768px){
+    
+ .employeeDash{
+    grid-template-columns: 1fr;
+ }
+ .rightBar{
+    align-items: center;
+    border-right: none;
+    border-bottom: 1px solid grey;
+ }
+ .leftBar_two{
+    justify-content: center;
+    gap: 150px;
+ }
+ .one{
+    display: none;
+ }
+ .two{
+    grid-template-columns: 1fr;
+    align-self: center;
+    text-align: center;
+    gap: 15px;
+    border: 1px solid grey;
+    border-radius: 10px;
+    padding: 10px 30px;
+ }
+ .two:hover {
+    border: 1px solid blue;
+ }
+ .action{
+    margin: 0 auto;
+ }
+ .name{
+   margin: 0 auto;
+ }
+ .result{
+   
+   display: flex;
+   flex-direction: column;
+   gap: 20px;
+ }
+}
+
+
