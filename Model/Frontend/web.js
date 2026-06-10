@@ -1,5 +1,6 @@
-const formSearch= document.querySelector(".form");
+const API_URL = "https://employee-wvpl.onrender.com/employee";
 
+// ---------------- ERRORS ----------------
 const FirstError = document.querySelector(".FirstError");
 const LastError = document.querySelector(".LastError");
 const EmailError = document.querySelector(".EmailError");
@@ -8,64 +9,54 @@ const PasswordError = document.querySelector(".PasswordError");
 const employeeError = document.querySelector(".employeeError");
 
 function clearErrors() {
-  document.querySelector(".FirstError").textContent = "";
-  document.querySelector(".LastError").textContent = "";
-  document.querySelector(".EmailError").textContent = "";
-  document.querySelector(".AgeError").textContent = "";
-  document.querySelector(".PasswordError").textContent = "";
-  document.querySelector(".employeeError").textContent = "";
+  FirstError.textContent = "";
+  LastError.textContent = "";
+  EmailError.textContent = "";
+  AgeError.textContent = "";
+  PasswordError.textContent = "";
+  employeeError.textContent = "";
 }
 
 function getErrors(errors = {}) {
   if (errors.fullname) FirstError.textContent = errors.fullname;
-
-  if (errors.email) LastError.textContent = errors.email;
-
-  if (errors.age) EmailError.textContent = errors.age;
-
-  if (errors.department) AgeError.textContent = errors.department;
-
+  if (errors.email) EmailError.textContent = errors.email;
+  if (errors.age) AgeError.textContent = errors.age;
+  if (errors.department) LastError.textContent = errors.department;
   if (errors.position) PasswordError.textContent = errors.position;
-
-   if (errors.employeeid) employeError.textContent = errors.employeeid;
+  if (errors.employeeid) employeeError.textContent = errors.employeeid;
 }
 
+// ---------------- OVERLAY ----------------
+const addBtn = document.querySelector(".addBtn");
+const overlay = document.querySelector(".overlay");
+const removeBtn = document.querySelector(".removeBtn");
 
+addBtn.addEventListener("click", () => {
+  overlay.classList.add("show");
+});
 
+removeBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  overlay.classList.remove("show");
+});
 
+overlay.addEventListener("click", (e) => {
+  if (e.target === overlay) {
+    overlay.classList.remove("show");
+  }
+});
 
-const addBtn= document.querySelector(".addBtn");
-const overlay= document.querySelector(".overlay");
-const removeBtn= document.querySelector(".removeBtn");
-
-addBtn.addEventListener("click",()=>{
-  overlay.classList.add("show")
-})
-
-removeBtn.addEventListener("click",()=>{
-  overlay.classList.remove("show")
-})
-
-overlay.addEventListener("click",(e)=>{
-   if(overlay === e.target ){
-     overlay.classList.remove("show")
-   }
-})
-
-
-
-
-
+// ---------------- STATE ----------------
 let state = {
   mode: "create",
   editId: null,
 };
 
-const formEmp= document.querySelector(".formEmp")
+// ---------------- FORM SUBMIT ----------------
+const formEmp = document.querySelector(".formEmp");
 
 formEmp.addEventListener("submit", async (e) => {
   e.preventDefault();
-
   clearErrors();
 
   const formdata = new FormData(formEmp);
@@ -76,173 +67,143 @@ formEmp.addEventListener("submit", async (e) => {
     age: Number(formdata.get("age")),
     department: formdata.get("department"),
     position: formdata.get("position"),
-    employeeid: formdata.get("employeeid")
+    employeeid: formdata.get("employeeid"),
   };
-  
+
   try {
     let res;
 
     if (state.mode === "edit") {
-      res = await fetch(`http://localhost:3000/employee/update/${state.editId}`, {
+      res = await fetch(`${API_URL}/update/${state.editId}`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data)
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
       });
-
-    } 
-    else {
-      res = await fetch("http://localhost:3000/employee/post", {
+    } else {
+      res = await fetch(`${API_URL}/post`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data)
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
       });
     }
+
     const result = await res.json();
-    const errorDiv = document.querySelector(".error");
 
     if (!res.ok) {
-      getErrors(result.errors);
+      getErrors(result.errors || {});
       return;
     }
 
-   
     formEmp.reset();
     overlay.classList.remove("show");
-    state.mode= "create";
-    state.editId= null;
+
+    state.mode = "create";
+    state.editId = null;
+
     fetchEmployee();
-    
-  }
-   catch (error) {
+  } catch (error) {
     console.log(error.message);
   }
 });
 
+// ---------------- SEARCH ----------------
+const formSearch = document.querySelector(".form");
 
+formSearch.addEventListener("submit", async (e) => {
+  e.preventDefault();
 
+  const searchInput = document.querySelector(".search");
+  const search = searchInput.value.trim();
 
+  try {
+    const res = await fetch(`${API_URL}/filter?search=${search}`);
+    const datas = await res.json();
 
-
-
-formSearch.addEventListener("submit", async(e)=>{
-     e.preventDefault();
-
-const search= document.querySelector(".search").value;
-  
-    try{
-  const res= await fetch(`http://localhost:3000/employee/filter?search=${search}`)
-  const datas= await res.json();
-
-   const post = document.querySelector(".result");
+    const post = document.querySelector(".result");
     post.innerHTML = "";
 
+    const employees = datas.employee || [];
 
-  datas.employee.forEach(result =>{
-       
-      const intials= result.fullname.split(" ").map(word => word[0]).join("").toUpperCase()
-      const div = document.createElement("div");
-      div.className= "two"
-      div.innerHTML = `
-       <p>${result.employeeid}</p>
-
-            <div class="name">
-                <div>${intials}</div>
-                <p>${result.fullname}</p>
-            </div>
-              <p>${result.email}</p>
-              <p>${result.age}</p>
-             <p>${result.department}</p>
-             <p>${result.position}</p>
-
-             <div class="action">
-               <i class="fa-solid fa-pen-to-square editBtn"></i>
-                <i class="fa-solid fa-trash deleteBtn"></i>
-             </div>
-  `;
-  const deleteBtn = div.querySelector(".deleteBtn");
-      deleteBtn.addEventListener("click", () => {
-        deleteUser(result._id);
-      });
-
-      const editBtn = div.querySelector(".editBtn");
-      editBtn.addEventListener("click", () => {
-        overlay.classList.add("show");
-        editUser(result);
-      });
-  post.appendChild(div)
-  })
- document.querySelector(".search").value= "";
-  
-    }
-    catch(error){
-    console.log(error.message)
+    if (employees.length === 0) {
+      post.innerHTML = "<p>No employees found</p>";
+      return;
     }
 
-})
+    employees.forEach((result) => {
+      renderEmployee(result, post);
+    });
 
+    searchInput.value = "";
+  } catch (error) {
+    console.log(error.message);
+  }
+});
 
-
-
-
-
-
-
+// ---------------- FETCH ALL ----------------
 const fetchEmployee = async () => {
   try {
-    const res = await fetch("http://localhost:3000/employee/");
+    const res = await fetch(`${API_URL}`);
     const results = await res.json();
 
     const post = document.querySelector(".result");
     post.innerHTML = "";
 
-    results.employee.forEach((result) => {
+    const employees = results.employee || [];
 
-      const intials= result.fullname.split(" ").map(word => word[0]).join("").toUpperCase()
-      const div = document.createElement("div");
-      div.className= "two"
-      div.innerHTML += `
-       <p>${result.employeeid}</p>
-
-            <div class="name">
-                <div>${intials}</div>
-                <p>${result.fullname}</p>
-            </div>
-              <p>${result.email}</p>
-              <p>${result.age}</p>
-             <p>${result.department}</p>
-             <p>${result.position}</p>
-
-             <div class="action">
-               <i class="fa-solid fa-pen-to-square editBtn"></i>
-                <i class="fa-solid fa-trash deleteBtn"></i>
-             </div>
-  `;
-   const deleteBtn = div.querySelector(".deleteBtn");
-      deleteBtn.addEventListener("click", () => {
-        deleteUser(result._id);
-      });
-
-      const editBtn = div.querySelector(".editBtn");
-      editBtn.addEventListener("click", () => {
-        overlay.classList.add("show");
-        editUser(result);
-      });
-
-      post.appendChild(div);
+    employees.forEach((result) => {
+      renderEmployee(result, post);
     });
   } catch (error) {
     console.log(error.message);
   }
 };
 
+// ---------------- RENDER FUNCTION ----------------
+function renderEmployee(result, post) {
+  const initials = result.fullname
+    .split(" ")
+    .map((word) => word[0])
+    .join("")
+    .toUpperCase();
 
+  const div = document.createElement("div");
+  div.className = "two";
+
+  div.innerHTML = `
+    <p>${result.employeeid}</p>
+
+    <div class="name">
+      <div>${initials}</div>
+      <p>${result.fullname}</p>
+    </div>
+
+    <p>${result.email}</p>
+    <p>${result.age}</p>
+    <p>${result.department}</p>
+    <p>${result.position}</p>
+
+    <div class="action">
+      <i class="fa-solid fa-pen-to-square editBtn"></i>
+      <i class="fa-solid fa-trash deleteBtn"></i>
+    </div>
+  `;
+
+  div.querySelector(".deleteBtn").addEventListener("click", () => {
+    deleteUser(result._id);
+  });
+
+  div.querySelector(".editBtn").addEventListener("click", () => {
+    overlay.classList.add("show");
+    editUser(result);
+  });
+
+  post.appendChild(div);
+}
+
+// ---------------- DELETE ----------------
 async function deleteUser(id) {
   try {
-    await fetch(`http://localhost:3000/employee/delete/${id}`, {
+    await fetch(`${API_URL}/delete/${id}`, {
       method: "DELETE",
     });
 
@@ -252,6 +213,7 @@ async function deleteUser(id) {
   }
 }
 
+// ---------------- EDIT ----------------
 function editUser(user) {
   state.mode = "edit";
   state.editId = user._id;
@@ -263,28 +225,8 @@ function editUser(user) {
   formEmp.position.value = user.position;
   formEmp.employeeid.value = user.employeeid;
 
- 
-  
-   formEmp.scrollIntoView({
-    behavior: "smooth",
-  })
+  formEmp.scrollIntoView({ behavior: "smooth" });
 }
 
-fetchEmployee()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// ---------------- INIT ----------------
+fetchEmployee();
