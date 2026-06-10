@@ -5,7 +5,8 @@ import router from './Router/router.js';
 import dotenv from 'dotenv'
 
 const app= express();
-const port= 3000;
+const PORT = process.env.PORT || 3000;
+
 dotenv.config()
 connectDB()
 
@@ -14,6 +15,6 @@ app.use(express.json());
 app.use(cors());
 app.use("/employee", router);
 
-app.listen(port, ()=>{
-    console.log(`server is running at http:localhost:${port}`)
-})
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
